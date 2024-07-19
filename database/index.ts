@@ -1,6 +1,7 @@
 // 导入mysql模块
 import mysql from 'mysql2'
-
+import dotenv from 'dotenv';
+dotenv.config();
 // // 创建数据库连接对象
 // const connection = mysql.createConnection({
 //   host: 'localhost',

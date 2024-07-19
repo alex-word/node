@@ -1,10 +1,8 @@
-// constants/code.ts
-
 // 枚举状态码 根据自己需要定义
 enum Code {
-  success = 3000,
-  denied,
-  error
+  success = 200,
+  denied=500,
+  error=400
 }
 
 enum CodeMessage {

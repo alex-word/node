@@ -30,19 +30,19 @@ const routerConf: Array<RouterConf> = [
 const getInfo = function () {
   return new Promise((resolve, reject) => {
     const sql = 'SELECT * FROM users';
-    db.query(sql, (err: any, results: unknown) => {
-      console.log(err, '123123');
-      if (err) reject(err)
-      resolve(results)
-    });
+    db.query(sql).then(res=>{
+      resolve(res[0])
+    }).catch(err=>{
+      reject(err)})
   })
 }
 function routes(app: Express) {
   // 根目录
-  // app.get('/', async (req: Request, res: Response) => {
-  //   const [e, result] = await silentHandle(getInfo)
-  //   e ? commonRes.error(res, null) : commonRes(res, { result })
-  // })
+
+  app.get('/', async (req: Request, res: Response) => {
+    const [e, data] = await silentHandle(getInfo)
+    e ? commonRes.error(res, null,e) : commonRes(res, { data })
+  })
   routerConf.forEach((conf) => app.use(conf.path, conf.router))
 }
 
