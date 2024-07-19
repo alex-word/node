@@ -4,10 +4,10 @@ import { Request, Response, NextFunction } from 'express'
 
 const responseHeader = (req: Request, res: Response, next: NextFunction) => {
   const { origin, Origin, referer, Referer } = req.headers
-  
+
   // 若没有手动设置，则为通配符
   const allowOrigin = origin || Origin || referer || Referer || '*'
-    
+
   // 允许请求源
   res.header('Access-Control-Allow-Origin', allowOrigin)
   // 允许头部字段
@@ -18,6 +18,8 @@ const responseHeader = (req: Request, res: Response, next: NextFunction) => {
   res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS')
   // 允许携带cookie
   res.header('Access-Control-Allow-Credentials', 'true')
+
+  res.setHeader('Content-Type', 'application/json');
 
   // 预检返回204
   if (req.method == 'OPTIONS') {
