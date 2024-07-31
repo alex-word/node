@@ -70,6 +70,7 @@ export const register = async (req: Request, res: Response) => {
 
     res.status(200).json({ message: 'User registered successfully' })
   } catch (error: any) {
+    
     return commonRes.error(res, null, error, 500)
   }
 }
