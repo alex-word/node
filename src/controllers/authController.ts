@@ -11,7 +11,7 @@ const SECRET_KEY = process.env.SECRET_KEY || '75ZAAcVICvblfmTYnfXLYcXPASj0P3a8'
 export const login = async (req: Request, res: Response) => {
   const { username, password } = req.body
   if (!username || !password) {
-    commonRes.error(res, null, 'Username and password are required')
+    return commonRes.error(res, null, 'Username and password are required')
   }
   try {
     const [rows, fields]: [QueryResult, FieldPacket[]] = await db.query(
@@ -20,13 +20,13 @@ export const login = async (req: Request, res: Response) => {
     )
 
     if ((rows as any[]).length === 0) {
-      commonRes.error(res, null, 'Invalid username or password')
+      return commonRes.error(res, null, 'Invalid username or password')
     }
     const user = (rows as any[])[0]
     const isPasswordValid = await bcrypt.compare(password, user.password)
 
     if (!isPasswordValid) {
-      commonRes.error(res, null, 'Invalid username or password')
+      return commonRes.error(res, null, 'Invalid username or password')
     }
 
     const token = jwt.sign(
@@ -36,9 +36,10 @@ export const login = async (req: Request, res: Response) => {
     )
 
     // res.json({ token });
-    commonRes(res, { token })
+
+    return commonRes(res, { token })
   } catch (error: any) {
-    commonRes.error(res, null, error, 500)
+    return commonRes.error(res, null, error, 500)
   }
 }
 
@@ -54,11 +55,10 @@ export const register = async (req: Request, res: Response) => {
   try {
     // 哈希密码
     const hashedPassword = await bcrypt.hash(password, 10)
-    const [rows]=   await db.query(
-      'SELECT * FROM users WHERE username = ?',
-      [username]
-    )
-    if((rows as any[])?.length>0){
+    const [rows] = await db.query('SELECT * FROM users WHERE username = ?', [
+      username,
+    ])
+    if ((rows as any[])?.length > 0) {
       commonRes.error(res, null, '不可以重复注册', 500)
       return
     }
@@ -70,7 +70,6 @@ export const register = async (req: Request, res: Response) => {
 
     res.status(200).json({ message: 'User registered successfully' })
   } catch (error: any) {
-    commonRes.error(res, null, error, 500)
+    return commonRes.error(res, null, error, 500)
   }
 }
-
