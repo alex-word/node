@@ -5,6 +5,7 @@ import db from '../../database'
 import { FieldPacket, QueryResult } from 'mysql2'
 import commonRes from '../../utils/commonRes'
 import dayjs from 'dayjs'
+import silentHandle from '../../utils/silentHandle'
 
 const SECRET_KEY = process.env.SECRET_KEY || '75ZAAcVICvblfmTYnfXLYcXPASj0P3a8'
 export const login = async (req: Request, res: Response) => {
@@ -72,3 +73,4 @@ export const register = async (req: Request, res: Response) => {
     commonRes.error(res, null, error, 500)
   }
 }
+

@@ -3,8 +3,8 @@
 import commonRes from '../../utils/commonRes'
 import silentHandle from '../../utils/silentHandle'
 import { Express, Request, Response, Router } from 'express'
-import login from './login';
-import register from './register';
+import login from './user/login';
+import register from './user/register';
 import db from '../../database'
 
 // 路由配置接口
