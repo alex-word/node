@@ -47,7 +47,7 @@ commonRes.error = function (
   this(res, data, {
     type: 'error',
     message: (message as {message: string})?.message || message || CodeMessage['error'],
-    status: status || 409,
+    status: 200,
   })
 }
 

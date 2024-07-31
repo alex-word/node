@@ -6,6 +6,7 @@ import { Express, Request, Response, Router } from 'express'
 import login from './user/login';
 import register from './user/register';
 import db from '../../database'
+import list from './user/list';
 
 // 路由配置接口
 interface RouterConf {
@@ -26,6 +27,11 @@ const routerConf: Array<RouterConf> = [
     router: register,
     meta: { requiresAuth: false }
   },
+  {
+    path: '/',
+    router: list,
+    meta: { requiresAuth: false }
+  },
 ]
 const getInfo = function () {
   return new Promise((resolve, reject) => {
@@ -39,10 +45,10 @@ const getInfo = function () {
 function routes(app: Express) {
   // 根目录
 
-  app.get('/', async (req: Request, res: Response) => {
-    const [e, data] = await silentHandle(getInfo)
-    e ? commonRes.error(res, null,e) : commonRes(res, { data })
-  })
+  // app.get('/user', async (req: Request, res: Response) => {
+  //   const [e, data] = await silentHandle(getInfo)
+  //   e ? commonRes.error(res, null,e) : commonRes(res, { data })
+  // })
   routerConf.forEach((conf) => app.use(conf.path, conf.router))
 }
 

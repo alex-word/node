@@ -21,6 +21,11 @@ const PORT = process.env.PORT
 
 // 启动
 app.listen(PORT, async () => {
-  logger.info(`App is running at http://localhost:${PORT}`)
+  // logger.info(`App is running at http://localhost:${PORT}`)
   routes(app)
 })
+
+process.on('uncaughtException', function (err) {
+  console.log('Caught Exception:' + err);//直接捕获method()未定义函数，Node进程未被退出。
+});
+
