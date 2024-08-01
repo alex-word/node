@@ -39,7 +39,7 @@ export const login = async (req: Request, res: Response) => {
 
     return commonRes(res, { token })
   } catch (error: any) {
-    return commonRes.error(res, null, error, 500)
+    return commonRes.error(res, null, error)
   }
 }
 
@@ -47,9 +47,7 @@ export const register = async (req: Request, res: Response) => {
   const { username, password } = req.body
 
   if (!username || !password) {
-    return res
-      .status(400)
-      .json({ message: 'Username and password are required' })
+    return commonRes.error(res, null, '用户名和密码都是必填项')
   }
 
   try {
@@ -59,7 +57,7 @@ export const register = async (req: Request, res: Response) => {
       username,
     ])
     if ((rows as any[])?.length > 0) {
-      commonRes.error(res, null, '不可以重复注册', 500)
+      commonRes.error(res, null, '不可以重复注册')
       return
     }
     // 存储用户信息
@@ -67,10 +65,8 @@ export const register = async (req: Request, res: Response) => {
       'INSERT INTO users (username, password, created_at) VALUES (?, ? , ?)',
       [username, hashedPassword, dayjs().format()]
     )
-
-    res.status(200).json({ message: 'User registered successfully' })
+    commonRes(res, { message: '注册成功' })
   } catch (error: any) {
-    
-    return commonRes.error(res, null, error, 500)
+    return commonRes.error(res, null, error)
   }
 }

@@ -41,12 +41,11 @@ commonRes.error = function (
   res: Response,
   data: unknown,
   message?: { message: string } | string,
-  status?: number
 ) {
   logger.error(message || CodeMessage['error'])
   this(res, data, {
     type: 'error',
-    message: (message as {message: string})?.message || message || CodeMessage['error'],
+    message: (message as { message: string })?.message || message || CodeMessage['error'],
     status: 200,
   })
 }
