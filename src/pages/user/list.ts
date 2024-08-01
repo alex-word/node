@@ -8,16 +8,27 @@ const getInfo = function () {
     const sql = 'SELECT * FROM users'
     db.query(sql)
       .then((res) => {
-        console.log(res[0]);
-        resolve(res[0])
+        const arr=(res[0]) as Array<{
+          id: number
+          username: string
+          email: string
+          created_at: string
+        }>
+        resolve(
+          arr?.map((item) => ({
+            id: item.id,
+            name: item.username,
+            email: item.email,
+            created_at: item.created_at,
+          }))
+        )
       })
       .catch((err) => {
         reject(err)
       })
   })
-} 
+}
 export const handleGetUserList = async (req: Request, res: Response) => {
   const [e, data] = await silentHandle(getInfo)
   e ? commonRes.error(res, null, e) : commonRes(res, { data })
 }
-

@@ -47,13 +47,14 @@ export const register = async (req: Request, res: Response) => {
   const { username, password, email, check_password } = req.body
 
   if (!username || !password) {
-    commonRes.error(res, null, '用户名和密码都是必填项')
+    return commonRes.error(res, null, '用户名和密码都是必填项')
   }
-  if (check_password === password) {
-    commonRes.error(res, null, '两次输入的密码不一致')
+  if (check_password !== password) {
+    return commonRes.error(res, null, '两次输入的密码不一致')
   }
-  if (email) {
-    commonRes.error(res, null, 'email是必填项')
+
+  if (!email) {
+    return commonRes.error(res, null, 'email是必填项')
   }
   try {
     // 哈希密码
@@ -62,13 +63,12 @@ export const register = async (req: Request, res: Response) => {
       username,
     ])
     if ((rows as any[])?.length > 0) {
-      commonRes.error(res, null, '不可以重复注册')
-
+      return commonRes.error(res, null, '不可以重复注册')
     }
     // 存储用户信息
     await db.query(
-      'INSERT INTO users (username, password, created_at, email) VALUES (?, ? , ? , ?)',
-      [username, hashedPassword, dayjs().format(), email]
+      'INSERT INTO users (username, password, email,created_at) VALUES (?, ? , ? , ?)',
+      [username, hashedPassword, email, dayjs().format()]
     )
     commonRes(res, { message: '注册成功' })
   } catch (error: any) {
