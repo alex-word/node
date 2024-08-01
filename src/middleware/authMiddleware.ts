@@ -1,22 +1,31 @@
-import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
+import { Request, Response, NextFunction } from 'express'
+import jwt from 'jsonwebtoken'
+import commonRes from '../../utils/commonRes'
 
 const SECRET_KEY = process.env.SECRET_KEY || '75ZAAcVICvblfmTYnfXLYcXPASj0P3a8'
 
-export const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-
+export const authenticateToken = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const token = req.headers.token as string
+  
+  if (req.originalUrl === '/login' || req.originalUrl === '/register') {
+    return next()
+  } else {
     if (token == null) {
-        return res.sendStatus(401); // 如果没有token，返回401 Unauthorized
+
+      return  commonRes.denied(res, null) // 如果没有token，返回401 
     }
 
     jwt.verify(token, SECRET_KEY, (err, user) => {
-        if (err) {
-            return res.sendStatus(403); // 如果token无效或过期，返回403 Forbidden
-        }
+      if (err) {
+        return  commonRes.denied(res, null) // 如果token无效或过期，返回403 Forbidden
+      }
 
-        (req as any).user = user;
-        next(); // 如果token有效，继续处理请求
-    });
-};
+      ;(req as any).user = user
+      next() // 如果token有效，继续处理请求
+    })
+  }
+}

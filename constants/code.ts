@@ -1,13 +1,13 @@
 // 枚举状态码 根据自己需要定义
 enum Code {
   success = 200,
-  denied=500,
+  denied=401,
   error=400
 }
 
 enum CodeMessage {
   success = '请求成功',
-  denied = '无权限',
+  denied = '请登录',
   error = '请求异常'
 }
 

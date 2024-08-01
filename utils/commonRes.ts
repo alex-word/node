@@ -9,13 +9,14 @@ interface ResOption {
   type?: codeType
   status?: number
   message?: unknown
+  code?: number
 }
 
 // 默认成功响应
 function commonRes(res: Response, data: unknown, options?: ResOption) {
   options = Object.assign({ type: Code[200] }, options || {}) // 默认success
 
-  const { type, status, message } = options
+  const { type, status, message, code } = options
   let resStatus = status
 
   if (resStatus === undefined) {
@@ -40,22 +41,25 @@ function commonRes(res: Response, data: unknown, options?: ResOption) {
 commonRes.error = function (
   res: Response,
   data: unknown,
-  message?: { message: string } | string,
+  message?: { message: string } | string
 ) {
   logger.error(message || CodeMessage['error'])
   this(res, data, {
     type: 'error',
-    message: (message as { message: string })?.message || message || CodeMessage['error'],
+    message:
+      (message as { message: string })?.message ||
+      message ||
+      CodeMessage['error'],
     status: 200,
   })
 }
 
 // 无权限响应
-commonRes.denied = function (res: Response, data: unknown) {
+commonRes.denied = function (res: Response, data: unknown, message?: string) {
   this(res, data, {
     type: 'denied',
-    message: CodeMessage['denied'],
-    status: 401,
+    message: message || CodeMessage['denied'],
+    status: 200,
   })
 }
 

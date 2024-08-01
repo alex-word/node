@@ -1,10 +1,10 @@
 import express from 'express'
 import routes from './routes' // 路由
-import logger from '../utils/logger'
 import initMiddleware from '../middleware'
 import dotenv from 'dotenv';
 import { Request, Response, NextFunction } from 'express';
 import responseHeader from '../middleware/responseHeader';
+import { authenticateToken } from './middleware/authMiddleware';
 dotenv.config();
 const app = express()
 // 挂载中间件
@@ -12,6 +12,7 @@ initMiddleware(app)
 
 app.use(express.json())
 app.use(responseHeader);
+app.use(authenticateToken);
 app.use((req: Request, res: Response, next: NextFunction) => {
   // 设置默认 Content-Type 响应头
   res.setHeader('Content-Type', 'application/json');
@@ -21,7 +22,6 @@ const PORT = process.env.PORT
 
 // 启动
 app.listen(PORT, async () => {
-  // logger.info(`App is running at http://localhost:${PORT}`)
   routes(app)
 })
 

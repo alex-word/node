@@ -8,6 +8,7 @@ const getInfo = function () {
     const sql = 'SELECT * FROM users'
     db.query(sql)
       .then((res) => {
+        console.log(res[0]);
         resolve(res[0])
       })
       .catch((err) => {
