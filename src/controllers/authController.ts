@@ -32,7 +32,7 @@ export const login = async (req: Request, res: Response) => {
     const token = jwt.sign(
       { id: user.id, username: user.username },
       SECRET_KEY,
-      { expiresIn: '8h' }
+      { expiresIn: 6000 }
     )
 
     // res.json({ token });
@@ -71,6 +71,40 @@ export const register = async (req: Request, res: Response) => {
       [username, hashedPassword, email, dayjs().format()]
     )
     commonRes(res, { message: '注册成功' })
+  } catch (error: any) {
+    commonRes.error(res, null, error)
+  }
+}
+
+export const updatePwd = async (req: Request, res: Response) => {
+  const { oldPassword, newPassword } = req.body;
+
+  if (!oldPassword || !newPassword) {
+    return commonRes.error(res, null, '新旧密码为必填项');
+  }
+
+  try {
+    // 查询用户的当前密码哈希
+    const [rows] = await db.query('SELECT password FROM users WHERE id = ?', [(req as any).user.id]);
+
+    if ((rows as any[]).length === 0) {
+      return commonRes.error(res, null, '用户不存在');
+    }
+
+    const user = (rows as any[])[0];
+
+    // 验证旧密码
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isMatch) {
+      return commonRes.error(res, null, '旧密码错误');
+    }
+
+    // 哈希新密码
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // 更新密码
+    await db.query('UPDATE users SET password = ? WHERE id = ?', [hashedPassword, (req as any).user.id]);
+    commonRes(res, { message: "密码修改成功" });
   } catch (error: any) {
     commonRes.error(res, null, error)
   }

@@ -29,7 +29,6 @@ function commonRes(res: Response, data: unknown, options?: ResOption) {
     code: Code[type as codeType],
     data,
   }
-  console.log(Code[type as codeType], type, sendRes, message)
 
   // 响应描述
   message && (sendRes.message = message)
