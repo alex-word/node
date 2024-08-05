@@ -20,7 +20,6 @@ export const authenticateToken = (
     }
 
     jwt.verify(token, SECRET_KEY, (err, user) => {
-      console.log(user);
       if (err) {
         return commonRes.denied(res, null) // 如果token无效或过期，返回401 
       }

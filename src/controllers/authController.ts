@@ -1,13 +1,12 @@
 import { Request, Response, NextFunction } from 'express'
-import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 import db from '../../database'
 import { FieldPacket, QueryResult } from 'mysql2'
 import commonRes from '../../utils/commonRes'
 import dayjs from 'dayjs'
+import createTokenCheck from '../../utils/createTokenCheck'
 import silentHandle from '../../utils/silentHandle'
 
-const SECRET_KEY = process.env.SECRET_KEY || '75ZAAcVICvblfmTYnfXLYcXPASj0P3a8'
 export const login = async (req: Request, res: Response) => {
   const { username, password } = req.body
   if (!username || !password) {
@@ -29,11 +28,12 @@ export const login = async (req: Request, res: Response) => {
       commonRes.error(res, null, 'Invalid username or password')
     }
 
-    const token = jwt.sign(
-      { id: user.id, username: user.username },
-      SECRET_KEY,
-      { expiresIn: 6000 }
-    )
+    // const token = jwt.sign(
+    //   { id: user.id, username: user.username },
+    //   SECRET_KEY,
+    //   { expiresIn: 6000 }
+    // )
+    const token = createTokenCheck.getToken({ id: user.id, username: user.username }, 7200000)
 
     // res.json({ token });
 
