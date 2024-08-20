@@ -6,6 +6,7 @@ import commonRes from '../../utils/commonRes'
 import dayjs from 'dayjs'
 import createTokenCheck from '../../utils/createTokenCheck'
 import silentHandle from '../../utils/silentHandle'
+import jwt from 'jsonwebtoken'
 
 export const login = async (req: Request, res: Response) => {
   const { username, password } = req.body
@@ -28,13 +29,7 @@ export const login = async (req: Request, res: Response) => {
       commonRes.error(res, null, 'Invalid username or password')
     }
 
-    // const token = jwt.sign(
-    //   { id: user.id, username: user.username },
-    //   SECRET_KEY,
-    //   { expiresIn: 6000 }
-    // )
-    const token = createTokenCheck.getToken({ id: user.id, username: user.username }, 7200000)
-
+    const token = createTokenCheck.getToken({ id: user.id, username: user.username }, '1h')
     // res.json({ token });
 
     commonRes(res, { token })

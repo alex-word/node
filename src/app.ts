@@ -1,9 +1,9 @@
 import express from 'express'
 import routes from './routes' // 路由
-import initMiddleware from '../middleware'
+import initMiddleware from './middleware'
 import dotenv from 'dotenv';
 import { Request, Response, NextFunction } from 'express';
-import responseHeader from '../middleware/responseHeader';
+import responseHeader from './middleware/responseHeader';
 import { authenticateToken } from './middleware/authMiddleware';
 dotenv.config();
 const app = express()
