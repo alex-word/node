@@ -8,6 +8,7 @@ import register from './user/register';
 import db from '../../database'
 import list from './user/list';
 import update_pwd from './user/update-pwd';
+import hot_search from './hotSearch';
 
 // 路由配置接口
 interface RouterConf {
@@ -36,6 +37,11 @@ export const routerConf: Array<RouterConf> = [
   {
     path: '/',
     router: update_pwd,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/',
+    router: hot_search,
     meta: { requiresAuth: true }
   },
 ]
