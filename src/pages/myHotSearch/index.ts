@@ -46,7 +46,6 @@ const handleHotSearch = function (req: Request) {
             fetch(url, config).then(res => res.text()).then(html => {
                 const $ = cheerio?.load(html);
                 const hotSearches: object[] = [];
-                // console.log(html);
 
                 $(selector).each((index: any, element: any) => {
                     switch (source) {
