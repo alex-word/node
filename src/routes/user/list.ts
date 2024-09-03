@@ -4,5 +4,4 @@ const router = Router();
 
 router.get('/user-list', handleGetUserList);
 
-
 export default router;
