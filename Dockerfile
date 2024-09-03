@@ -1,8 +1,8 @@
 # 使用官方 Node.js 镜像作为基础镜像
 FROM node:20
 
-# 全局安装 Yarn
-RUN npm install -g yarn
+# 设置 npm 镜像源为淘宝源，加快依赖安装速度
+RUN npm config set registry https://registry.npmmirror.com && npm install -g yarn
 
 # 设置工作目录
 WORKDIR /usr/src/app
