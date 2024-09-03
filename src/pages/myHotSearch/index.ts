@@ -11,6 +11,7 @@ const PORT = 3000;
 interface ZhiHuItemProps {
     target: { link: { url: string; }; titleArea: { text: any; }; metricsArea: { text: any; }; };
 }
+
 // 爬取不同数据的函数
 const handleHotSearch = function (req: Request) {
     const { source } = req.params
