@@ -3,6 +3,7 @@ import uuid from 'node-uuid';
 const cheerio = require('cheerio');
 const https = require('https');
 import commonRes from '../../../utils/commonRes';
+import db from '../../../database'
 import silentHandle from '../../../utils/silentHandle';
 import { weiboConfig, baiduConfig, zhihuConfig, toutiaoConfig, sougouConfig, tengxunConfig, tiebaConfig, douyinConfig, bilibiliConfig } from './config'
 
@@ -181,6 +182,8 @@ const handleHotSearch = function (req: Request) {
                                     })))
                         case 'bilibili':
                             hotList = JSON.parse(html).data?.list
+                            // const sqlList =
+                            //     [hotList?.map(item => ([item.title, item.short_link_v2, item.stat.view, 'bilibili']))]
                             hotSearches.push(...hotList?.map(
                                 (item: any) => (
                                     {
@@ -190,6 +193,12 @@ const handleHotSearch = function (req: Request) {
                                         hot_metrics: item.stat.view,
                                         source: 'bilibili'
                                     })))
+                        // db.query('TRUNCATE TABLE hot_search')
+                        // db.query(
+                        //     'INSERT INTO hot_search (hot_search_title, hot_search_href, hot_metrics,source) VALUES ?', sqlList
+                        // ).then(() => {
+                        //     console.log('插入成功');
+                        // })
                         default:
                             break;
                     }
