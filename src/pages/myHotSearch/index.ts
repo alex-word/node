@@ -47,18 +47,18 @@ const handleHotSearch = function (req: Request) {
             fetch(url, config).then(res => res.text()).then(html => {
                 const $ = cheerio?.load(html);
                 const hotSearches: object[] = [];
-
                 $(selector).each((index: any, element: any) => {
                     switch (source) {
                         case 'weibo':
                             if ($(element).find('span').text().trim() !== '') {
                                 const titleElement = $(element).find('a')
                                 const id = uuid.v4(titleElement.text().trim());
+                                const hot_metrics = $(element).find('span').text().trim().split(' ')
                                 hotSearches.push({
                                     hot_search_id: id,
                                     hot_search_title: titleElement.text().trim(),
                                     hot_search_href: 'https://s.weibo.com' + titleElement[0].attribs.href,
-                                    hot_metrics: $(element).find('span').text().trim(),
+                                    hot_metrics: hot_metrics[hot_metrics.length - 1],
                                     source: 'weibo'
                                 });
                             }
@@ -68,19 +68,19 @@ const handleHotSearch = function (req: Request) {
                             hotSearches.push({
                                 hot_search_id: uuid.v4(titleElement.text().trim()),
                                 hot_search_title: titleElement.text().trim(),
-                                hot_search_href: 'https://s.weibo.com' + titleElement[0].parent.attribs.href,
+                                hot_search_href: titleElement[0].parent.attribs.href,
                                 hot_metrics: $(element).find('.hot-index_1Bl1a').text().trim(),
                                 source: 'baidu'
                             });
                             break;
                         case 'zhihu':
-                            hotSearches.push(JSON.parse(element.children[0].data).initialState.topstory.hotList?.map(
+                            hotSearches.push(...JSON.parse(element.children[0].data).initialState.topstory.hotList?.map(
                                 (item: ZhiHuItemProps) => (
                                     {
                                         hot_search_id: item.target.link.url.substring(31,),
                                         hot_search_title: item.target.titleArea.text,
                                         hot_search_href: item.target.link.url,
-                                        hot_metrics: item.target.metricsArea.text,
+                                        hot_metrics: item.target.metricsArea.text.substring(0, item.target.metricsArea.text.length - 2),
                                         source: 'zhihu'
                                     })))
                             break;

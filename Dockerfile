@@ -1,16 +1,14 @@
 # 使用官方 Node.js 镜像作为基础镜像
 FROM node:20
 
-# 设置 npm 镜像源为淘宝源，加快依赖安装速度
-RUN npm config set registry https://registry.npmmirror.com && npm install -g yarn
-
 # 设置工作目录
 WORKDIR /usr/src/app
 
 # 复制 package.json 和 yarn.lock（推荐）以更高效地缓存依赖安装步骤
-COPY package.json yarn.lock ./
+COPY package.json ./
 
 # 安装项目依赖
+
 RUN yarn install
 
 # 复制项目代码到容器
